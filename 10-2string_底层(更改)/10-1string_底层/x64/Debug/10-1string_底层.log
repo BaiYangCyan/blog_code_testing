@@ -1,0 +1,10 @@
+﻿  string.cpp
+  test.cpp
+D:\code\10-1string_底层\10-1string_底层\string.cpp(22,3): error C2065: “cout”: 未声明的标识符
+D:\code\10-1string_底层\10-1string_底层\string.cpp(22,49): error C2065: “endl”: 未声明的标识符
+D:\code\10-1string_底层\10-1string_底层\string.cpp(64,15): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+D:\code\10-1string_底层\10-1string_底层\test.cpp(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+D:\code\10-1string_底层\10-1string_底层\test.cpp(219,9): error C2065: “it”: 未声明的标识符
+D:\code\10-1string_底层\10-1string_底层\test.cpp(220,12): error C2065: “it”: 未声明的标识符
+D:\code\10-1string_底层\10-1string_底层\test.cpp(221,5): error C2065: “it”: 未声明的标识符
+  正在生成代码...
