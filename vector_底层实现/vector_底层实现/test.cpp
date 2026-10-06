@@ -42,13 +42,7 @@ void test1()
 	}
 	cout << endl;
 	cout << v2.size() << " " << v2.capacity() << endl;
-	v2.resize(3);
-	for (auto& e : v2)
-	{
-		cout << e << " ";
-	}
-	cout << endl;
-	cout << v2.size() << " " << v2.capacity() << endl;
+
 }
 
 
