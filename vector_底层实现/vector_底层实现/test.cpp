@@ -1,3 +1,4 @@
+#define _CRT_SECURE_NO_WARNINGS 1
 #include<iostream>
 #include"vector.h"
 #include<vector>
@@ -73,8 +74,23 @@ void test2()
 	}
 	cout << endl;
 }
+void test3()
+{
+	bit::vector<int> v;
+	for (int i = 1; i <= 5; ++i)
+		v.push_back(i * 10);
+	cout << "[memcpy + int] data=";
+	for (auto e : v) cout << e << " ";
+	cout << "| size=" << v.size() << " capacity=" << v.capacity() << endl;
+	cout << "still running: main is about to return normally" << endl;
+
+
+
+
+
+}
 int main()
 {
-	test2();
+	test3();
 	return 0;
 }

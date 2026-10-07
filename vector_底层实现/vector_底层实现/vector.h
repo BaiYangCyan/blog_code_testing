@@ -1,14 +1,52 @@
 #pragma once
+
 #include<assert.h>
+#include<string.h>
 
 
+namespace bite
+{
+	class string
+	{
+	public:
+		string(const char* str = "")
+		{
+			_str = new char[strlen(str) + 1];
+			strcpy(_str, str);
+		}
+		string(const string& s)
+			: _str(new char[strlen(s._str) + 1])
+		{
+			strcpy(_str, s._str);
+		}
+		string& operator=(const string& s)     // ä¼ ç»Ÿæ·±æ‹·è´å†™æ³•
+		{
+			if (this != &s)
+			{
+				char* tmp = new char[strlen(s._str) + 1];
+				strcpy(tmp, s._str);
+				delete[] _str;
+				_str = tmp;
+			}
+			return *this;
+		}
+		~string()
+		{
+			delete[] _str;
+			_str = nullptr;
+		}
+		const char* c_str() const { return _str; }
+	private:
+		char* _str;
+	};
+}
 
 namespace bit
 {
 	template<class T>
 	class vector {
 	public:
-		//µü´úÆ÷
+		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		typedef T* iterator;
 		typedef const T* const_iterator;
 
@@ -17,7 +55,7 @@ namespace bit
 
 		size_t size() const{ return _finish - _start; }
 		size_t capacity() const{ return _end_of_storage - _start; }
-		bool empty()const { return _finish == _end_of_storage; }
+		bool empty()const { return _finish == _start; }
 
 		T& operator[](size_t pos)
 		{
@@ -29,9 +67,9 @@ namespace bit
 			assert(pos < size());
 			return _start[pos];
 		}
-		//¿Õ°×¹¹Ôì
+		//ï¿½Õ°×¹ï¿½ï¿½ï¿½
 		vector(){}
-		//¿½±´¹¹Ôì
+		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		vector(const vector<T>&v)
 		{
 			_start = new T[v.capacity()];
@@ -44,14 +82,47 @@ namespace bit
 			
 		}
 
-		//Îö¹¹º¯Êı
+		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		vector<T>& operator=(const vector<T>& v)
+		{
+			if (this != &v)
+			{
+				T* tmp = new T[v.capacity()];
+				for (size_t i = 0; i < v.size(); i++)
+				{
+					tmp[i] = v._start[i];
+				}
+				delete[]_start;
+				_start = tmp;
+				_finish = _start + v.size();
+				_end_of_storage = _start + v.capacity();
+			}
+			return *this;
+		}
+
+		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		~vector()
 		{
 			delete[]_start;
 			_finish = _end_of_storage = nullptr;
 		}
 
-		void reserve(size_t n);
+		//void reserve(size_t n);
+		void reserve(size_t n)
+		{
+			if (n > capacity())
+			{
+				size_t sz = size();
+				T* tmp = new T[n];
+				if (_start)
+					memcpy(tmp, _start, sizeof(T) * sz);  // æµ…æ‹·è´ï¼æŒ‡é’ˆè¢«åŸæ ·å¤åˆ¶
+				delete[] _start;
+				_start = tmp;
+				_finish = _start + sz;
+				_end_of_storage = _start + n;
+			}
+		}
+
 		void resize(size_t n, const T& val=T());
 
 		void push_back(const T& x);
@@ -66,7 +137,7 @@ namespace bit
 		iterator _end_of_storage = nullptr;
 
 	};
-	template<class T>
+	/*template<class T>
 	void vector<T>::reserve(size_t n)
 	{
 		size_t old_size = size();
@@ -82,20 +153,28 @@ namespace bit
 			_finish = _start + old_size;
 			_end_of_storage = _start+n;
 		}
-	}
+	}*/
 	template<class T>
 	void vector<T>::resize(size_t n, const T& val)
 	{
-		if (n > capacity())
+		if (n > size())
 		{
-			reserve(n);
+			if (n > capacity())
+			{
+				reserve(n);
+			}
 			for (size_t i = size(); i < n; i++)
 			{
 				_start[i] = val;
 			}
+			_finish = _start + n;
 		}
 		else
 		{
+			for (iterator it = _start + n; it != _finish; ++it)
+			{
+				it->~T();
+			}
 			_finish = _start + n;
 		}
 	}
@@ -145,7 +224,7 @@ namespace bit
 	template<class T>
 	 typename vector<T>::iterator vector<T>::erase(iterator pos)
 	{
-		 assert(pos >= _start && pos <= _finish);
+		 assert(pos >= _start && pos < _finish);
 		 iterator end = pos+1;
 		 while (end != _finish)
 		 {
