@@ -1,36 +1,37 @@
-# vector-sim：C++ vector 模拟实现配套代码
+# vector-sim：C++ vector 一站式实验代码（单文件版）
 
 配套文章：《C++入门篇（十四）：vector 模拟实现——三指针、扩容流程与 memcpy 陷阱》
 
-文章链接：https://blog.csdn.net/Bai_YangSQ/article/details/166995456
+文章链接：https://blog.csdn.net/Bai_YangSQ/article/details/167221493
 
-## 文件说明
+## 一分钟上手
 
-| 文件 | 对应文章位置 | 说明 |
+1. **只想看结果**：直接打开 `output.txt`（含崩溃实验的复现记录），不用装编译器
+2. **想自己跑**：双击 `build.bat`（需要 g++），一键编译 + 运行 + 刷新 output.txt
+3. **想找某段代码**：打开 `vector_sim.cpp`，按下面导览表 Ctrl+F 搜函数名
+
+## 代码导览
+
+| 文章章节 | 内容 | 搜索函数名 |
 | --- | --- | --- |
-| `vector_sim.cpp` | 第一~八节 + 附录 | 完整教学版，包含全部测试，输出与文章一致 |
-| `memcpy_crash.cpp` | 第七节 实验 A | memcpy 版 reserve + 自定义 string：堆损坏复现 |
-| `memcpy_int_ok.cpp` | 第七节 实验 C | 同样的 memcpy 版 reserve + int：表面正常 |
-| `growth.cpp` | 第十一节 互动实验 | 三条扩容曲线（2 倍 / 1.5 倍+最小增量 / 1.5 倍起点 4） |
+| 第一~六节 + 第七节实验 B | 手写 vector 全部测试（正确版逐个深拷贝，全程安全） | `namespace bit` / `test_sim()` |
+| 第七节 实验 C | memcpy + int 对照组（表面正常，掩盖 UB） | `test_memcpy_int()` |
+| 第七节 实验 A | memcpy + 自定义类型（**会崩溃**，需 -DRUN_CRASH） | `test_memcpy_crash()` |
+| 第十一节 | 扩容曲线对比（2 倍 / 1.5 倍两种规则） | `test_growth()` |
 
-## 编译运行（g++）
+## 手动编译（Linux / macOS / 有 g++ 的环境）
 
 ```bash
-g++ -std=c++11 vector_sim.cpp    -o vector_sim    && ./vector_sim
-g++ -std=c++11 memcpy_int_ok.cpp -o memcpy_int_ok && ./memcpy_int_ok
-g++ -std=c++11 growth.cpp        -o growth        && ./growth
-g++ -std=c++11 memcpy_crash.cpp  -o memcpy_crash  && ./memcpy_crash   # 会崩，属预期
+# 默认运行（跳过崩溃实验）
+g++ -std=c++11 -O2 -Wall -Wextra vector_sim.cpp -o vector_sim && ./vector_sim
+
+# 复现崩溃实验（离开作用域析构时堆损坏，Windows 退出码 0xC0000374）
+g++ -std=c++11 -O2 -DRUN_CRASH vector_sim.cpp -o vector_crash && ./vector_crash
 ```
-
-## 预期输出
-
-- `vector_sim`：依次打印各节测试结果，最后一行 `ALL TESTS PASSED`
-- `memcpy_int_ok`：输出 `[memcpy + int] data=10 20 30 40 50 | size=5 capacity=8` 后正常退出
-- `growth`：打印三条容量增长序列（1.5 倍最小增量那条与 VS 观察值一致）
-- `memcpy_crash`：`push 1` ~ `push 5` 全部打印后，离开作用域、在析构阶段崩溃（Windows 退出码 `0xC0000374`，即 STATUS_HEAP_CORRUPTION）；编译时还会出现 `-Wclass-memaccess` 警告——这些都是实验 A 的预期现象，不是代码 bug
 
 ## 说明
 
-- 全部为教学简化版，用于理解三指针、扩容流程、迭代器失效与 memcpy 陷阱，不代表标准库实现
+- 教学简化版，用于理解三指针、扩容流程与深浅拷贝，不代表标准库实现
 - 生产代码请直接使用 `std::vector`
-- 实测环境：w64devkit g++ 15.2.0（`-std=c++11`）/ VS2022 x64 Debug
+- 实测环境：w64devkit g++ 15.2.0（`-std=c++11` / `-O2`）/ VS2022 x64
+- `output.txt` 由 `build.bat`（-O2）真实运行生成；末尾附 `-DRUN_CRASH` 崩溃复现记录

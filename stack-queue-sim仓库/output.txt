@@ -1,0 +1,26 @@
+========== 第二节 stack 实战：最小栈 ==========
+getMin=-3
+top=0 getMin=-2
+top=-2 getMin=-2
+
+========== 第四节 容器适配器：换底层 ==========
+stack 顶: 4 4 4
+queue 头尾: 1/4  1/4
+
+========== 第五节 手写模拟实现测试 ==========
+[deque 底层] size=5 top=50 | pop: 50 40 30 20 10 | empty=1
+[vector 底层] size=5 top=50 | pop: 50 40 30 20 10 | empty=1
+[list 底层] size=5 top=50 | pop: 50 40 30 20 10 | empty=1
+[deque 底层] size=5 front=10 back=50 | pop: 10 20 30 40 50 | empty=1
+[list 底层] size=5 front=10 back=50 | pop: 10 20 30 40 50 | empty=1
+
+========== 第六节 priority_queue 手写堆 ==========
+[默认大堆] top=9 | 依次弹出: 9 8 7 6 5 4 3 2 1 0 
+[greater 小堆] top=0 | 依次弹出: 0 1 2 3 4 5 6 7 8 9 
+[push 版大堆] size=10 top=9
+
+========== 第七节 deque 特性验证 ==========
+双端插入后: -10 0 10 20 30 | size=5
+dq[0]=-10  dq[4]=30
+中间插 99: -10 0 10 99 20 30 | size=6
+两头各删一个: 0 10 99 20 | size=4
