@@ -1,0 +1,42 @@
+========== 第一节 非类型模板参数 ==========
+array<int, 5>  size=5  data: 0 10 20 30 40 
+array<int>     size=10（默认参数 N=10）
+
+========== 第三节 函数模板特化 ==========
+LessFunc(1, 2)         = 1（内置类型，正确）
+LessFunc(d1, d2)       = 1（日期对象，正确）
+LessFunc(p1, p2)       = 0（特化后比对象：7-8 < 7-7 不成立，正确）
+std::less<Date*>()     = 1（未特化：比地址，错误）
+
+========== 第四节 类模板全特化 / 偏特化 ==========
+Data<T1, int>（偏特化）
+Data<int, char>（全特化）
+Data<T1, int>（偏特化）
+Data<T1, T2>（主模板）
+Data<T1*, T2*>（指针偏特化）
+Data<T1&, T2&>（引用偏特化）
+
+========== 第五节 类模板特化实战：排序 Date* ==========
+[vector<Date>  排序] 2022-7-6 2022-7-7 2022-7-8 
+[按地址排序  ] 2022-7-7 2022-7-6 2022-7-8 
+[Less<Date*> 特化] 2022-7-6 2022-7-7 2022-7-8 
+
+========== 附：模板分离编译演示（split 子目录） ==========
+【方案一（推荐）】声明和定义都放进头文件（split/good）
+运行输出：
+3
+3
+11
+
+【坏例】声明在 .h、定义在 .cpp（split/bad）
+编译通过，链接报错（g++/ld 真实输出，MSVC 下等价于 LNK2019）：
+D:\dev\w64devkit\bin/ld.exe: split\bad\main.o:main.cpp:(.text+0x27): undefined reference to `int Add<int>(int const&, int const&)'
+D:\dev\w64devkit\bin/ld.exe: split\bad\main.o:main.cpp:(.text+0x74): undefined reference to `double Add<double>(double const&, double const&)'
+collect2.exe: error: ld returned 1 exit status
+链接失败，未生成可执行文件。
+
+【方案二】定义在 .cpp + 显式实例化（split/explicit，工程上不推荐）
+运行输出：
+3
+3
+11
