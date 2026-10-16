@@ -1,0 +1,65 @@
+========== 第一节 基础继承与访问权限 ==========
+identity(): 张三 / 18
+study(): 张三 正在学习
+identity(): 张三 / 18
+teaching(): 张三 正在授课
+（_name 在派生类内部可见：protected；_age 不可见：private）
+
+========== 第二节 继承类模板 ==========
+stack: 3 2 1 | 复用基类的 size(): 0
+
+========== 第三节 赋值兼容与对象切片 ==========
+指针看基类部分: jack | 引用看基类部分: jack
+切片后 pobj: jack（_No 被切掉了）
+sobj 不受影响: jack / _No=18
+
+========== 第四节 作用域与隐藏 ==========
+ 姓名:小李子
+ 身份证号:111
+ 学号:999
+B::fun(int i): 10
+A::fun()
+（成员函数隐藏只看函数名，不看参数列表）
+
+========== 第五节 默认成员函数全链路 ==========
+--- 构造 s1 ---
+  Person(const char*)  构造：jack
+  Student(const char*, int) 构造
+--- 拷贝构造 s2(s1) ---
+  Person(const Person&) 拷贝构造
+  Student(const Student&) 拷贝构造
+--- 构造 s3 ---
+  Person(const char*)  构造：rose
+  Student(const char*, int) 构造
+--- 赋值 s1 = s3 ---
+  Student::operator=(const Student&) 赋值
+  Person::operator=(const Person&) 赋值
+--- 离开作用域：析构顺序 = 派生类先、基类后 ---
+  ~Student() 析构
+  ~Person() 析构
+  ~Student() 析构
+  ~Person() 析构
+  ~Student() 析构
+  ~Person() 析构
+
+========== 第五节附 不能被继承的类 ==========
+Base::func5（final 类，禁止被继承）
+
+========== 第六节 友元与静态成员 ==========
+Display: peter / 20260001
+非静态成员 _name 的地址不同: 0x2a325ff710 vs 0x2a325ff760（派生类各自继承一份）
+静态成员 _count 的地址: 0x7ff65c0f9030 vs 0x7ff65c0f9030（两个地址一模一样：全体系共用一份）
+两个类域都能访问: 0 / 0
+
+========== 第七节 多继承、菱形继承与虚继承 ==========
+非虚菱形：Student::_name = xxx（Student 那份）
+非虚菱形：Teacher::_name = yyy（Teacher 那份）（两份数据，冗余）
+sizeof(非虚 Assistant) = 112 字节
+虚菱形：av._name = 王五（最派生类 AssistantV 执行的 PersonV("王五") 生效）
+sizeof(虚 AssistantV) = 96 字节
+p1 == p3 ? 1，p1 != p2 ? 1
+字节偏移：p1->0，p2->4（先继承的在前）
+
+========== 第八节 继承与组合 ==========
+好开-操控
+组合版 stack2: 8（is-a / has-a 都符合时，优先组合）
