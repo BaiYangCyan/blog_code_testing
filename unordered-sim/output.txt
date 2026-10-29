@@ -1,0 +1,41 @@
+========== 一、unordered_set 基本操作 ==========
+--- unordered_set：去重、查找、删除 ---
+Size=4，count(3)=1，count(9)=0
+排序后: 1 2 3 5 （unordered 遍历顺序不保证）
+find(3)=1，find(9)=0
+erase(3) 后 Size=3，count(3)=0
+
+========== 二、unordered_map 与词频 ==========
+--- unordered_map：insert / operator[] / 词频 ---
+重复插入 left: second=0，值仍是 左边
+left=左边, 剩余，insert=插入，string=""
+按 key 排序后: insert:插入 left:左边, 剩余 right:右边 sort:排序 string: 
+词频: 苹果=6，西瓜=3，香蕉=2，Size=3
+
+========== 三、bucket 与负载因子 ==========
+--- bucket、负载因子、rehash ---
+插入 100 个：bucket_count=167，load_factor=0.599，max_load_factor=0.700
+bucket(42)=42，bucket_size(42)=1
+reserve(500)：bucket_count=761，load_factor=0.131
+rehash(1000)：bucket_count=1031，load_factor=0.097
+（bucket_count 的具体数值由标准库实现决定）
+
+========== 四、multiset / multimap ==========
+--- unordered_multiset / unordered_multimap ---
+multiset: count(1)=2，count(3)=3
+equal_range(3) 枚举到 3 个
+multimap: count(apple)=2，值: 1 2 
+
+========== 五、set vs unordered_set 性能 ==========
+--- set vs unordered_set，N=1000000 ---
+插入：set 436.65 ms，unordered_set 57.19 ms
+查找：set 524.05 ms（命中 1000000），unordered_set 8.35 ms（命中 1000000）
+删除：set 475.60 ms，unordered_set 45.36 ms
+剩余：set 0，unordered_set 0
+（时间随机器波动；两边数据、查找/删除顺序完全相同）
+
+========== 六、rehash 与迭代器稳定性 ==========
+--- rehash：迭代器失效，但引用/指针仍有效 ---
+rehash 前 bucket_count=127，rehash 后=541
+原指针仍可读：99（值=99）
+（原迭代器已失效，不要再用；引用/指针不因 rehash 失效）
